@@ -1,0 +1,13 @@
+# requirements.txt
+# 文字處理與檔案操作相關
+# (目前無需額外套件，Python 內建功能已足夠)
+
+# 未來 PDF 解析可能用到的套件
+PyPDF2==3.0.1  # 用於解析 PDF 文件
+pdfplumber==0.11.4  # 另一個強大的 PDF 解析工具
+
+# 未來與 Ollama 整合可能需要的套件
+requests==2.32.3  # 用於與 Ollama 的 API 交互（如果使用 HTTP 調用）
+
+# 測試與開發工具
+pytest==8.3.2  # 單元測試框架
