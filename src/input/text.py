@@ -1,4 +1,6 @@
 # src/input/text.py
+from .crawler import fetch_stock_data
+
 def read_text_input(file_path):
     """讀取文字檔案中的股票資料"""
     try:
@@ -17,8 +19,23 @@ def parse_text_input(text):
             data[key.strip()] = value.strip()
     return data
 
+def get_stock_data(source="crawler", file_path=None, stock_code=None):
+    """獲取股票數據，可從檔案或爬蟲取得"""
+    if source == "file" and file_path:
+        text = read_text_input(file_path)
+        if text:
+            return parse_text_input(text)
+    elif source == "crawler" and stock_code:
+        return fetch_stock_data(stock_code)
+    return None
+
 if __name__ == "__main__":
-    # 測試範例
-    sample_text = "股票號碼: 2330\n本益比: 15\nEPS: 5.2"
-    parsed_data = parse_text_input(sample_text)
-    print(parsed_data)
+    # 測試從爬蟲獲取數據
+    stock_data = get_stock_data(source="crawler", stock_code="2330")
+    if stock_data:
+        print(stock_data)
+
+    # 測試從檔案獲取數據
+    # stock_data = get_stock_data(source="file", file_path="data/text/sample.txt")
+    # if stock_data:
+    #     print(stock_data)
