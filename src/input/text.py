@@ -1,5 +1,5 @@
 # src/input/text.py
-from .crawler import fetch_stock_data
+from src.input.crawler import fetch_yfinance_data  # 更新導入名稱
 
 def read_text_input(file_path):
     """讀取文字檔案中的股票資料"""
@@ -26,7 +26,7 @@ def get_stock_data(source="crawler", file_path=None, stock_code=None):
         if text:
             return parse_text_input(text)
     elif source == "crawler" and stock_code:
-        return fetch_stock_data(stock_code)
+        return fetch_yfinance_data(stock_code)  # 更新為新的爬蟲函數
     return None
 
 if __name__ == "__main__":
@@ -34,8 +34,3 @@ if __name__ == "__main__":
     stock_data = get_stock_data(source="crawler", stock_code="2330")
     if stock_data:
         print(stock_data)
-
-    # 測試從檔案獲取數據
-    # stock_data = get_stock_data(source="file", file_path="data/text/sample.txt")
-    # if stock_data:
-    #     print(stock_data)
