@@ -1,7 +1,7 @@
 # src/output/ollama_client.py
 import ollama
 import subprocess
-import json
+import time
 
 def check_available_models():
     """檢查本地已安裝的 Ollama 模型"""
@@ -13,35 +13,45 @@ def check_available_models():
     except subprocess.CalledProcessError:
         return []
 
-def get_model_options():
-    """返回可選模型清單"""
-    return [
-        "deepseek-r1:1.5b", "deepseek-r1:7b", "deepseek-r1:8b", "deepseek-r1:14b",
-        "deepseek-r1:32b", "deepseek-r1:70b", "llama3:8b", "llama3:70b",
-        "qwen2:7b", "qwen2:14b", "qwen2:32b"
-    ]
+def pull_model(model_name):
+    """自動拉取指定的 Ollama 模型"""
+    print(f"正在下載模型 {model_name}...")
+    try:
+        subprocess.run(['ollama', 'pull', model_name], check=True)
+        print(f"模型 {model_name} 下載完成")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"無法下載模型 {model_name}: {e}")
+        return False
 
 def select_model(preferred_model="deepseek-r1:14b"):
-    """選擇可用模型，若首選不在則從可選清單中挑選"""
+    """選擇指定的模型，若不在本地則自動拉取"""
     available_models = check_available_models()
-    options = get_model_options()
     
     if preferred_model in available_models:
+        print(f"使用本地模型: {preferred_model}")
         return preferred_model
     else:
         print(f"首選模型 {preferred_model} 未安裝，可用模型: {available_models}")
-        for option in options:
-            if option in available_models:
-                print(f"使用可用模型: {option}")
-                return option
-        print("無可用模型，請先安裝 Ollama 模型（例如：ollama pull deepseek-r1:14b）")
-        return None
+        print(f"自動拉取指定模型 {preferred_model}")
+        if pull_model(preferred_model):
+            # 等待幾秒確保模型載入完成
+            time.sleep(5)
+            if preferred_model in check_available_models():
+                print(f"成功載入模型: {preferred_model}")
+                return preferred_model
+            else:
+                print(f"拉取 {preferred_model} 後仍不可用")
+                return None
+        else:
+            print(f"自動拉取 {preferred_model} 失敗，請檢查 Ollama 服務或網路連線")
+            return None
 
 def generate_ollama_suggestion(analysis, model="deepseek-r1:14b"):
     """使用指定的 Ollama 模型生成投資建議"""
     selected_model = select_model(model)
     if not selected_model:
-        return "無法生成建議：無可用模型"
+        return f"無法生成建議：無法使用或拉取模型 {model}"
 
     prompt = "以下是一隻股票的分析數據，請根據這些數據提供完整的投資建議（包括是否買入、賣出或持有，並解釋原因）：\n"
     for key, value in analysis.items():
