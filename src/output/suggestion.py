@@ -1,5 +1,5 @@
 # src/output/suggestion.py
-import ollama
+from src.output.ollama_client import generate_ollama_suggestion
 
 def generate_suggestion(analysis):
     """根據分析結果生成投資建議（使用本地方法）"""
@@ -36,22 +36,6 @@ def generate_suggestion(analysis):
         suggestion += f"近三個月股價標準差: {analysis['three_month_std']:.2f} 元\n"
     suggestion += "建議: 綜合評估基本面與市場趨勢後決定買賣策略。"
     return suggestion
-
-def generate_ollama_suggestion(analysis):
-    """使用 Ollama 的 deepseek-r1:14b 生成完整的投資建議"""
-    prompt = "以下是一隻股票的分析數據，請根據這些數據提供完整的投資建議（包括是否買入、賣出或持有，並解釋原因）：\n"
-    for key, value in analysis.items():
-        prompt += f"{key}: {value}\n"
-    prompt += "\n請提供專業且具體的投資建議，並考慮基本面與技術面因素。"
-
-    try:
-        response = ollama.chat(
-            model="deepseek-r1:14b",
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return response["message"]["content"]
-    except Exception as e:
-        return f"Ollama 服務異常: {e}"
 
 if __name__ == "__main__":
     sample_analysis = {
