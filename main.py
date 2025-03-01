@@ -5,7 +5,7 @@ from src.output.suggestion import generate_suggestion, generate_ollama_suggestio
 
 def main():
     # 測試爬蟲獲取台股數據
-    stock_data = get_stock_data(source="crawler", stock_code="4938")
+    stock_data = get_stock_data(source="crawler", stock_code="1301")
     if stock_data:
         print("原始數據:", stock_data)
         
