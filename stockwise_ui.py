@@ -312,11 +312,6 @@ class StockWiseApp(QMainWindow):
         file_type = self.file_type_combo.currentText()
         self.statusBar().showMessage(f"正在分析{file_type}...")
         
-        # 实际应用中根据不同文件类型调用不同分析函数
-        # 这里只做模拟
-        self.file_results_display.setPlainText(f"分析檔案: {file_path}\n\n【分析結果】\n此為示範內容，實際開發中根據檔案類型調用相應的分析功能。\n\n如果是文字檔案，將解析其中的股票資訊；\n如果是PDF，將提取財報關鍵資訊；\n如果是技術圖表，將識別圖形模式。")
-        
-        self.statusBar().showMessage(f"{file_type}分析完成")
         
     def refresh_models(self):
         """刷新 Ollama 模型列表"""
