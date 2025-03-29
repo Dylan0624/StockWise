@@ -19,6 +19,62 @@
 
 ---
 
+## 🔄 系統流程
+
+以下流程圖展示了 StockWise 的工作原理和數據流向：
+
+```mermaid
+flowchart TD
+    A[User Input] -->|Stock Code| B[Data Source]
+    A -->|File Upload| F[File Analysis]
+    
+    B -->|Web Crawler| C[YFinance API]
+    B -->|Local File| D[Text Parser]
+    
+    C --> E[Raw Stock Data]
+    D --> E
+    
+    E --> G[Data Analyzer]
+    F -->|PDF/Text| G
+    
+    G --> H[Analysis Result]
+    
+    H --> I[Local Suggestion]
+    H --> J[Ollama AI]
+    
+    J -->|LLM Processing| K[AI Suggestion]
+    
+    I --> L[GUI Display]
+    K --> L
+    
+    subgraph "Input Module"
+    A
+    B
+    C
+    D
+    F
+    end
+    
+    subgraph "Analysis Module"
+    E
+    G
+    H
+    end
+    
+    subgraph "Output Module"
+    I
+    J
+    K
+    end
+    
+    style A fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style L fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style J fill:#d4f0f0,stroke:#333,stroke-width:2px
+    style K fill:#d4f0f0,stroke:#333,stroke-width:2px
+```
+
+---
+
 ## 🛠 環境需求  
 
 - Python **3.8+**  
